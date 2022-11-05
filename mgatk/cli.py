@@ -10,6 +10,7 @@ import time
 import pysam
 import math
 import glob
+import subprocess
 
 from pkg_resources import get_distribution
 from subprocess import call, check_call
@@ -352,10 +353,13 @@ def main(mode, input, output, name, mito_genome, ncores,
 			'proper_paired' : sqs(proper_pairs), 'NHmax' : sqs(nhmax), 'NMmax' : sqs(nmmax), 'max_javamem' : sqs(max_javamem)}
 		
 		# Potentially submit jobs to cluster
-		snakeclust = ""
+		snakeclust = []
 		njobs = int(jobs)
 		if(njobs > 0 and cluster != ""):
-			snakeclust = " --jobs " + jobs + " --cluster '" + cluster + "' "
+			snakeclust = [
+				"--jobs", jobs,
+				"--cluster", cluster
+			]
 			click.echo(gettime() + "Recognized flags to process jobs on a computing cluster.", logf)
 			
 		click.echo(gettime() + "Processing samples with "+ncores+" threads", logf)
@@ -373,12 +377,21 @@ def main(mode, input, output, name, mito_genome, ncores,
 			snake_stats = logs + "/" + name + ".snakemake_scatter.stats"
 			snake_log = logs + "/" + name + ".snakemake_scatter.log"
 			
-			snake_log_out = ""
+			# snakecmd_scatter = 'snakemake'+snakeclust+' --snakefile ' + script_dir + '/bin/snake/Snakefile.Scatter --cores '+ncores+' --stats '+snake_stats	+' --config cfp='+ y_s		
+			scatter_args = [
+				'--snakefile', script_dir+'/bin/snake/Snakefile.Scatter',
+				'--cores', ncores,
+				'--stats', snake_stats,
+				'--config', 'cfp='+ y_s	
+			]
+			snakecmd_scatter = ['snakemake'] + snakeclust + scatter_args
 			if not snake_stdout:
-				snake_log_out = ' &>' + snake_log
-				
-			snakecmd_scatter = 'snakemake'+snakeclust+' --snakefile ' + script_dir + '/bin/snake/Snakefile.Scatter --cores '+ncores+' --config cfp="'  + y_s + '" --stats '+snake_stats + snake_log_out
-			os.system(snakecmd_scatter)
+				print(f'Writing snakemake scatter output to {snake_log}')
+				with open(snake_log,'w') as scatter_log:
+					subprocess.run(snakecmd_scatter, check=True, stdout=scatter_log, stderr=subprocess.STDOUT)
+			else:
+				subprocess.run(snakecmd_scatter, check=True)
+
 			
 		elif(mode == "tenx"):
 			
@@ -386,12 +399,19 @@ def main(mode, input, output, name, mito_genome, ncores,
 			snake_stats = logs + "/" + name + ".snakemake_tenx.stats"
 			snake_log = logs + "/" + name + ".snakemake_tenx.log"
 			
-			snake_log_out = ""
+			scatter_args = [
+				'--snakefile', script_dir+'/bin/snake/Snakefile.tenx',
+				'--cores', ncores,
+				'--stats', snake_stats,
+				'--config', 'cfp='+ y_s	
+			]
+			snakecmd_scatter = ['snakemake'] + snakeclust + scatter_args
 			if not snake_stdout:
-				snake_log_out = ' &>' + snake_log
-				
-			snakecmd_tenx = 'snakemake'+snakeclust+' --snakefile ' + script_dir + '/bin/snake/Snakefile.tenx --cores '+ncores+' --config cfp="'  + y_s + '" --stats '+snake_stats + snake_log_out
-			os.system(snakecmd_tenx)
+				print(f'Writing snakemake scatter output to {snake_log}')
+				with open(snake_log,'w') as scatter_log:
+					subprocess.run(snakecmd_scatter, check=True, stdout=scatter_log, stderr=subprocess.STDOUT)
+			else:
+				subprocess.run(snakecmd_scatter, check=True)
 		
 		click.echo(gettime() + "mgatk successfully processed the supplied .bam files", logf)
 
@@ -411,19 +431,29 @@ def main(mode, input, output, name, mito_genome, ncores,
 		# Snakemake gather
 		snake_stats = logs + "/" + name + ".snakemake_gather.stats"
 		snake_log = logs + "/" + name + ".snakemake_gather.log"
-		
-		snake_log_out = ""
-		if not snake_stdout:
-			snake_log_out = ' &>' + snake_log 
 			
-		snakecmd_gather = 'snakemake --snakefile ' + script_dir + '/bin/snake/Snakefile.Gather --cores 1 --config cfp="' + y_g + '" --stats '+snake_stats + snake_log_out
-		os.system(snakecmd_gather)
+		snakecmd_gather = [
+			'snakemake',
+			'--snakefile', script_dir + '/bin/snake/Snakefile.Gather',
+			'--cores' , '1',
+			"--stats", snake_stats,
+			'--config', 'cfp='+y_g
+		]
+		
+		if not snake_stdout:
+			print(f'Writing snakemake gather output to {snake_log}')
+			with open(snake_log,'w') as gather_log:
+				subprocess.run(snakecmd_gather, check=True, stdout=gather_log, stderr=subprocess.STDOUT)
+		else:
+			subprocess.run(snakecmd_gather, check=True)
+		# with open(snake_log, 'w') as gather_out:
+		# 	subprocess.run(snakecmd_gather, check=True, stdout=gather_out, stderr=subprocess.STDOUT)
 	
-	if(mode == "call" or mode == "tenx"):
+	if(mode == "call" or mode == "tenx") and not skip_r:
 
 		# Make .rds file from the output
 		Rcall = "Rscript " + script_dir + "/bin/R/toRDS.R " + output + "/final " + name
-		os.system(Rcall)
+		subprocess.run(Rcall, shell=True, check=True)
 		click.echo(gettime() + "Successfully created final output files", logf)
 
 	if(mode == "remove-background"):
