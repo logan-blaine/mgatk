@@ -29,11 +29,11 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   # of of them
   importDT <- function(file){
     if(tools::file_ext(file) == "gz"){
-      cov <- suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE))
-    } else if(tools::file_ext(file) %in% c("txt", "csv", "tsv")){
-      cov <- suppressMessages(data.table::fread(paste0(file), stringsAsFactors = TRUE))
+      cov <- suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE, sep='\t'))
+    } else if(tools::file_ext(file) %in% c("txt", "tsv")){
+      cov <- suppressMessages(data.table::fread(paste0(file), stringsAsFactors = TRUE, sep='\t'))
     } else{
-      stop("Provide a valid file format for the  file (.gz, .txt, .csv, or .tsv)")
+      stop("Provide a valid file format for the  file (.gz, .txt, or .tsv)")
     }
   }
   
@@ -58,9 +58,9 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   importSMs <- function(file){
     # fread the individual variant calls in
     if(tools::file_ext(file) == "gz"){
-      dt <-  suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE))
+      dt <-  suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE, sep='\t'))
     } else if(tools::file_ext(file) %in% c("txt", "csv", "tsv")){
-      dt <-  suppressMessages(data.table::fread(paste0(file), stringsAsFactors = TRUE))
+      dt <-  suppressMessages(data.table::fread(paste0(file), stringsAsFactors = TRUE, sep='\t'))
     } else{
       stop("Provide a valid file format for the alt allele abundances (.gz, .txt, .csv, or .tsv)")
     }

@@ -141,7 +141,7 @@ def writeSparseMatrixLetter(letter, letter_idx):
 			# Write each position
 			for i in range(0,int(max_bp)):
 				if(fw_vec[i] > 0 or rev_vec[i] > 0):
-					file_handle_fn.write(str(i+1)+","+cell_name+","+str(fw_vec[i])+","+str(rev_vec[i])+"\n")
+					file_handle_fn.write(str(i+1)+"\t"+cell_name+"\t"+str(fw_vec[i])+"\t"+str(rev_vec[i])+"\n")
 
 writeSparseMatrixLetter("A", 0)
 writeSparseMatrixLetter("C", 1)
@@ -163,7 +163,7 @@ with open(out_file_coverage,"w") as file_handle_cov:
 			# Write each position
 			for i in range(0,int(max_bp)):
 				if(cov_vec[i] > 0):
-					file_handle_cov.write(str(i+1)+","+cell_name+","+str(cov_vec[i])+"\n")
+					file_handle_cov.write(str(i+1)+"\t"+cell_name+"\t"+str(cov_vec[i])+"\n")
 			
 			# Now write the depth
 			file_handle_depth.write(cell_name+"\t"+str(depth)+"\n")

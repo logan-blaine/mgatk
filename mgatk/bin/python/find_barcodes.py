@@ -49,7 +49,7 @@ bc = list(barcodes.keys())
 	
 quant_file_o = open(quant_file, "w") 
 for k, v in barcodes.items():
-	quant_file_o.write(k +","+ str(v)+"\n")
+	quant_file_o.write(k +"\t"+ str(v)+"\n")
 quant_file_o.close() 
 
 passing_file_o = open(passing_file, "w") 

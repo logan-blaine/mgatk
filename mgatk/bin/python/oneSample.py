@@ -92,7 +92,7 @@ os.system(alleleCountcall)
 with open(prefixSM + ".coverage.txt", 'r') as coverage:
 	depth = 0
 	for row in coverage:
-		s = row.split(",")
+		s = row.split("\t")
 		depth += int(s[2].strip())
 with open(outputdepth, 'w') as d:
 	d.write(sample + "\t" + str(round(float(depth)/float(mito_length),2)) + "\n")

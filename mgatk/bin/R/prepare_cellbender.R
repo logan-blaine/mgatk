@@ -89,28 +89,28 @@ ReadMGATK <- function(dir, verbose = TRUE) {
   column.names <- c("pos", "cellbarcode", "plus", "minus")
   a.counts <- read.table(
     file = a.path,
-    sep = ",",
+    sep = "\t",
     header = FALSE,
     stringsAsFactors = FALSE,
     col.names = column.names
   )
   c.counts <- read.table(
     file = c.path,
-    sep = ",",
+    sep = "\t",
     header = FALSE,
     stringsAsFactors = FALSE,
     col.names = column.names
   )
   t.counts <- read.table(
     file = t.path,
-    sep = ",",
+    sep = "\t",
     header = FALSE,
     stringsAsFactors = FALSE,
     col.names = column.names
   )
   g.counts <- read.table(
     file = g.path,
-    sep = ",",
+    sep = "\t",
     header = FALSE,
     stringsAsFactors = FALSE,
     col.names = column.names

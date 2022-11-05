@@ -24,20 +24,20 @@ def writeSparseMatrix(mid, vec):
 	with open(outpre + "."+mid+".txt","w") as V:
 		for i in range(0,int(maxBP)):
 			if(vec[i] > 0):
-				V.write(str(i+1)+","+sample+","+str(vec[i])+"\n")
+				V.write(str(i+1)+"\t"+sample+"\t"+str(vec[i])+"\n")
 
 
 def writeSparseMatrix2(mid, vec1, vec2):
 	with open(outpre + "."+mid+".txt","w") as V:
 		for i in range(0,int(maxBP)):
 			if(vec1[i] > 0 or vec2[i] > 0):
-				V.write(str(i+1)+","+sample+","+str(vec1[i])+","+str(vec2[i])+"\n")
+				V.write(str(i+1)+"\t"+sample+"\t"+str(vec1[i])+"\t"+str(vec2[i])+"\n")
 
 def writeSparseMatrix4(mid, vec1, vec2, vec3, vec4):
 	with open(outpre + "."+mid+".txt","w") as V:
 		for i in range(0,int(maxBP)):
 			if(vec1[i] > 0 or vec3[i] > 0):
-				V.write(str(i+1)+","+sample+","+str(vec1[i])+","+str(vec2[i])+","+str(vec3[i])+","+str(vec4[i])+"\n")
+				V.write(str(i+1)+"\t"+sample+"\t"+str(vec1[i])+"\t"+str(vec2[i])+"\t"+str(vec3[i])+"\t"+str(vec4[i])+"\n")
 
 
 n = int(maxBP)

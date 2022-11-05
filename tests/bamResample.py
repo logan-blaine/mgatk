@@ -114,9 +114,9 @@ out.close()
 # Output the coverages
 def writeSparseMatrixN(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11):
 	with open(coverageRatio,"w") as V:
-		V.write("BP,"+str(os.path.basename(os.path.splitext(bam1)[0]))+","+str(os.path.basename(os.path.splitext(bam2)[0])) + ",ratio,A1,C1,G1,T1,A2,C2,G2,T2\n")
+		V.write("BP,"+str(os.path.basename(os.path.splitext(bam1)[0]))+"\t"+str(os.path.basename(os.path.splitext(bam2)[0])) + ",ratio,A1,C1,G1,T1,A2,C2,G2,T2\n")
 		for i in range(0,int(maxBP)-1):
-			V.write(str(i+1)+","+str(v1[i])+","+str(v2[i])+","+str(v3[i])+","+str(v4[i])+","+str(v5[i])+","+str(v6[i])+","+str(v7[i])+","+str(v8[i])+","+str(v9[i])+","+str(v10[i])+","+str(v11[i])+"\n")
+			V.write(str(i+1)+"\t"+str(v1[i])+"\t"+str(v2[i])+"\t"+str(v3[i])+"\t"+str(v4[i])+"\t"+str(v5[i])+"\t"+str(v6[i])+"\t"+str(v7[i])+"\t"+str(v8[i])+"\t"+str(v9[i])+"\t"+str(v10[i])+"\t"+str(v11[i])+"\n")
 
 zipped_list1 = zip(list(countsA1),list(countsC1),list(countsG1),list(countsT1))
 sums1 = [sum(item) for item in zipped_list1]
