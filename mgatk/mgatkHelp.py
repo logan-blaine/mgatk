@@ -164,9 +164,11 @@ def make_folder(folder):
 
 def file_len(fname):
     with open(fname) as f:
-        for i, l in enumerate(f):
-            pass
-    return i + 1
+	    s = sum(1 for line in f)
+    return s
+    #     for i, l in enumerate(f):
+    #         pass
+    # return i + 1
 
 def split_barcodes_file(barcode_file, nsamples, output):
 	"""

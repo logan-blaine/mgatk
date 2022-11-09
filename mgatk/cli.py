@@ -180,16 +180,15 @@ def main(mode, input, output, name, mito_genome, ncores,
 			click.echo(gettime() + "User specified mitochondrial genome does NOT match .bam file; correctly specify reference genome or .fasta file")
 			quit()
 		
-		# Actually call the external script based on user input
-		if(not barcode_known):
-			barc_quant_file = of + "/final/barcodeQuants.tsv"
-			passing_barcode_file = of + "/final/passingBarcodes.tsv"
-			find_barcodes_py = script_dir + "/bin/python/find_barcodes.py"
-			
-			pycall = " ".join(['python', find_barcodes_py, input, bcbd, barcode_tag, str(min_barcode_reads), mito_chr, barc_quant_file, passing_barcode_file])
-			os.system(pycall)
-			barcodes = passing_barcode_file
-
+		# Call the external script based on user input
+		barc_quant_file = of + "/final/barcodeQuants.tsv"
+		passing_barcode_file = of + "/final/passingBarcodes.tsv"
+		find_barcodes_py = script_dir + "/bin/python/find_barcodes.py"
+		
+		subprocess.run(['python', find_barcodes_py, input, bcbd, barcode_tag, str(min_barcode_reads), mito_chr, barc_quant_file, passing_barcode_file, barcodes])
+		# os.system(pycall)
+		barcodes = passing_barcode_file
+		
 		# Potentially split the valid barcodes into smaller files if we need to
 		if(mode == "bcall"):
 			barcode_files = split_barcodes_file(barcodes, nsamples, output)
